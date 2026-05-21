@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> MovieRecomendationStream</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="style.css.css">
+    
+</head>
+<body>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay" id="loadingSpinner">
+        <div class="text-center">
+            <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status"></div>
+            <p class="mt-3 text-muted">Loading thrillers...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="bi bi-film"></i> MovieREC</a>
+            <button class="navbar-toggler bg-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"><i class="bi bi-distribute-vertical "style="color:red;"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#trending">Trending movies</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#movies">All movies</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#watchlist">My List <span id="navWatchlistCount" class="badge bg-danger ms-1" style="display:none;">0</span></a></li>
+                </ul>
+                <div class="search-container">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search thrillers...">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="hero-bg" id="heroBg" style="background-image: url('https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=1920');"></div>
+        <div class="hero-content">
+            <div class="container">
+                <span class="hero-badge"><i class="bi bi-lightning-charge-fill"></i> Top MOVIE Pick</span>
+                <h1 class="hero-title" id="heroTitle">Loading...</h1>
+                <div class="hero-meta" id="heroMeta">
+                    <span class="rating"><i class="bi bi-star-fill"></i> --</span>
+                    <span id="heroYear">----</span>
+                    <span id="heroDuration">--</span>
+                    <span class="thriller-tag">Thriller</span>
+                </div>
+                <p class="lead mb-4" style="max-width: 600px; color: #d2d2d2;" id="heroDesc">
+                    Loading thriller details...
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-play" onclick="playMovie(currentHeroMovie?.id || heroMovies[0]?.id)">
+                        <i class="bi bi-play-fill"></i> Play Now
+                    </button>
+                    <button class="btn btn-more" onclick="showHeroDetails()">
+                        <i class="bi bi-info-circle"></i> More Info
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Thrillers Section -->
+    <section class="py-5" id="trending">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><i class="bi bi-lightning"></i> Trending MOVIES</h2>
+                <a href="#" class="text-decoration-none" style="color: #ff4444;">View All <i class="bi bi-chevron-right"></i></a>
+            </div>
+            <div class="row g-4" id="trendingGrid">
+                <div class="col-6 col-md-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-3"><div class="loading-skeleton"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Thrillers Section -->
+    <section class="py-5" id="movies">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><i class="bi bi-knife"></i> All MOVIES</h2>
+            </div>
+            
+            <div class="filter-pills" id="genreFilters">
+                <span class="filter-pill active" data-genre="53">All MOVIES</span>
+                <span class="filter-pill" data-genre="53,80">Crime  MOVIES</span>
+                <span class="filter-pill" data-genre="53,27">Horror  MOVIES</span>
+                <span class="filter-pill" data-genre="53,9648">Mystery  MOVIES</span>
+                <span class="filter-pill" data-genre="53,28">Action  MOVIES</span>
+                <span class="filter-pill" data-genre="53,878">Sci-Fi  MOVIES</span>
+            </div>
+
+            <div class="row g-4" id="moviesGrid">
+                <div class="col-6 col-md-4 col-lg-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-4 col-lg-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-4 col-lg-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-4 col-lg-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-4 col-lg-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-4 col-lg-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-4 col-lg-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-4 col-lg-3"><div class="loading-skeleton"></div></div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <button class="btn btn-outline-danger px-5" id="loadMoreBtn" onclick="loadMoreMovies()">Load More Thrillers</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommended For You -->
+    <section class="py-5" style="background: linear-gradient(to bottom, transparent, rgba(139,0,0,0.1));">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><i class="bi bi-eye"></i> More Thrillers For You</h2>
+            </div>
+            <div class="row g-4" id="recommendedGrid">
+                <div class="col-6 col-md-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-3"><div class="loading-skeleton"></div></div>
+                <div class="col-6 col-md-3"><div class="loading-skeleton"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Watchlist Section -->
+    <section class="py-5" id="watchlist">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><i class="bi bi-bookmark-heart-fill"></i> My Thriller Watchlist</h2>
+                <span class="text-muted" id="watchlistCount">0 movies</span>
+            </div>
+            <div class="row g-4" id="watchlistGrid">
+                <div class="col-12 text-center py-5 text-muted">
+                    <i class="bi bi-bookmark-plus" style="font-size: 3rem;"></i>
+                    <p class="mt-3">Your watchlist is empty. Start adding thrillers!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h4 class="fw-bold mb-3" style="color: #ff4444;"><i class="bi bi-film"></i> ThrillStream</h4>
+                    <p class="text-muted">Your dedicated destination for the best thriller movies. Heart-pounding suspense, edge-of-your-seat tension, and unforgettable twists.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled text-muted">
+                        <li><a href="#" class="text-muted text-decoration-none">About Us</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Contact</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">Follow Us</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr style="border-color: rgba(139,0,0,0.2);">
+            <div class="text-center text-muted">
+                <small>Data provided by <a href="https://www.themoviedb.org/" class="text-decoration-none text-muted">TMDB</a>. This product uses the TMDB API but is not endorsed or certified by TMDB.</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Movie Details Modal -->
+    <div class="modal fade" id="movieModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="modalTitle">Movie Title</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <img src="" alt="Movie Poster" class="movie-poster-lg" id="modalPoster">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="mb-3">
+                                <span class="badge bg-danger me-2" id="modalRating"><i class="bi bi-star-fill"></i> --</span>
+                                <span class="text-muted" id="modalYear">----</span>
+                                <span class="text-muted mx-2">|</span>
+                                <span class="text-muted" id="modalDuration">--</span>
+                                <span class="thriller-tag ms-2">Thriller</span>
+                            </div>
+                            <p class="text-muted mb-3" id="modalGenres"></p>
+                            <p id="modalDesc">Loading description...</p>
+                            
+                            <div class="mt-4">
+                                <h6 class="fw-bold mb-3"><i class="bi bi-people"></i> Cast</h6>
+                                <div class="d-flex gap-3 flex-wrap" id="modalCast"></div>
+                            </div>
+
+                            <div class="mt-4 d-flex gap-2">
+                                <button class="btn btn-danger" onclick="playMovie(currentModalMovie?.id)">
+                                    <i class="bi bi-play-fill"></i> Watch Now
+                                </button>
+                                <button class="btn btn-outline-light" id="modalWatchlistBtn" onclick="toggleModalWatchlist()">
+                                    <i class="bi bi-plus-lg"></i> Add to Watchlist
+                                </button>
+                                <button class="btn btn-outline-light" onclick="shareMovie()">
+                                    <i class="bi bi-share"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Player Overlay -->
+    <div class="video-player-overlay" id="videoPlayerOverlay">
+        <div class="video-container">
+            <button class="video-close" onclick="closeVideoPlayer()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            <div class="video-wrapper" id="videoWrapper">
+                <!-- Video content injected here -->
+            </div>
+            <div class="video-info">
+                <div class="video-title" id="videoPlayerTitle">Movie Title</div>
+                <div class="video-controls">
+                    <button class="video-control-btn" onclick="toggleFullscreen()">
+                        <i class="bi bi-fullscreen"></i> Fullscreen
+                    </button>
+                    <button class="video-control-btn" onclick="closeVideoPlayer()">
+                        <i class="bi bi-x-lg"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js.js"></script>
+</body>
+</html>
